@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 from transformers import pipeline
 import os
 from reconstruct import reconstruct_sentence_with_model
+from generate import generate_k_sentences  # Import the sentence generation function
 
 app = Flask(__name__)
 
@@ -26,75 +27,24 @@ def reconstruct():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
-# Create templates directory if it doesn't exist
-if not os.path.exists('templates'):
-    os.makedirs('templates')
-
-# Create the template file if it doesn't exist
-template_path = os.path.join('templates', 'index.html')
-if not os.path.exists(template_path):
-    with open(template_path, 'w') as f:
-        f.write('''
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Sentence Reconstructor</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; max-width: 800px; margin: 0 auto; }
-        h1 { color: #333; }
-        textarea { width: 100%; height: 100px; margin-bottom: 10px; padding: 8px; }
-        button { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; cursor: pointer; }
-        button:hover { background-color: #45a049; }
-        #result { margin-top: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; background-color: #f9f9f9; }
-    </style>
-</head>
-<body>
-    <h1>Sentence Reconstructor</h1>
-    <p>Enter a sentence below and the model will reconstruct it word by word.</p>
+@app.route('/generate', methods=['GET'])
+def generate():
+    # Get parameters from request, with defaults
+    k = request.args.get('k', default=5, type=int)
+    length = request.args.get('length', default=5, type=int)
     
-    <textarea id="sentence" placeholder="Enter a sentence..."></textarea>
-    <button onclick="reconstructSentence()">Reconstruct</button>
+    # Validate parameters
+    if k <= 0 or length <= 0:
+        return jsonify({'error': 'Parameters k and length must be positive integers'}), 400
     
-    <div id="result" style="display: none;">
-        <h3>Results:</h3>
-        <p><strong>Original:</strong> <span id="original"></span></p>
-        <p><strong>Reconstructed:</strong> <span id="reconstructed"></span></p>
-    </div>
-
-    <script>
-        function reconstructSentence() {
-            const sentence = document.getElementById('sentence').value;
-            if (!sentence) {
-                alert('Please enter a sentence');
-                return;
-            }
-            
-            fetch('/reconstruct', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ sentence: sentence }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    alert('Error: ' + data.error);
-                    return;
-                }
-                
-                document.getElementById('original').textContent = data.original;
-                document.getElementById('reconstructed').textContent = data.reconstructed;
-                document.getElementById('result').style.display = 'block';
-            })
-            .catch(error => {
-                alert('Error: ' + error);
-            });
-        }
-    </script>
-</body>
-</html>
-        ''')
+    try:
+        # Generate sentences
+        sentences = generate_k_sentences(k, length)
+        return jsonify({
+            'sentences': sentences,
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
