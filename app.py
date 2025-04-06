@@ -1,10 +1,10 @@
-
 from flask import Flask, render_template, request, jsonify
 from transformers import pipeline
 import os
 from reconstruct import reconstruct_sentence_with_model
 from generate import generate_k_sentences  # Import the sentence generation function
 from autocomplete import autocomplete_sentence
+
 
 app = Flask(__name__)
 
