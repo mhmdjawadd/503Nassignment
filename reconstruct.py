@@ -1,4 +1,6 @@
-def reconstruct_sentence_with_model(sentence: str, fill_mask_model) -> str:
+from .model import fill_mask_model
+
+def reconstruct_sentence_with_model(sentence: str) -> str:
     """
     Reconstructs a sentence by masking one word at a time (alternating odd/even indices),
     getting the model's prediction, and updating the sentence immediately.

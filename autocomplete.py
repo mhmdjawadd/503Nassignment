@@ -1,6 +1,4 @@
-from transformers import pipeline
-
-fill_mask = pipeline('fill-mask', model = 'bert-base-uncased')
+from .model import fill_mask_model as fill_mask
 
 #takes sentence w/ [MASK] token & returns completed sentence
 #argument: sentence (str) = takes input sentence including the [MASK] token
