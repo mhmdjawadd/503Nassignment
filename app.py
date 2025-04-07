@@ -3,6 +3,8 @@ from transformers import pipeline
 import os
 from reconstruct import reconstruct_sentence_with_model
 from generate import generate_k_sentences  # Import the sentence generation function
+from autocomplete import autocomplete_sentence
+
 
 app = Flask(__name__)
 
@@ -45,6 +47,21 @@ def generate():
         })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+    
+@app.route('/autocomplete', methods=['POST'])
+def autocomplete():
+    data = request.get_json()
+    sentence = data.get('sentence', '')
+
+    if not sentence:
+        return jsonify({'error': 'No sentence was provided'}), 400
+    
+    try:
+        complete_sentence = autocomplete_sentence(sentence)
+        return jsonify({'original': sentence, 'completed': complete_sentence})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+           
 
 if __name__ == '__main__':
     app.run(debug=True)
