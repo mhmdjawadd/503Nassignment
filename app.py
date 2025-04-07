@@ -1,10 +1,8 @@
-from flask import Flask, render_template, request, jsonify
-from transformers import pipeline
-import os
-from reconstruct import reconstruct_sentence_with_model
-from generate import generate_k_sentences  # Import the sentence generation function
-from autocomplete import autocomplete_sentence
-from .model import fill_mask_model  as fill_mask
+from flask import Flask,  request, jsonify
+from services.reconstruct import reconstruct_sentence
+from services.generate import generate_k_sentences  
+from services.autocomplete import autocomplete_sentence
+
 
 app = Flask(__name__)
 
@@ -18,7 +16,7 @@ def reconstruct():
         return jsonify({'error': 'No sentence provided'}), 400
     
     try:
-        reconstructed = reconstruct_sentence_with_model(sentence)
+        reconstructed = reconstruct_sentence(sentence)
         return jsonify({'original': sentence, 'reconstructed': reconstructed})
     except Exception as e:
         return jsonify({'error': str(e)}), 500

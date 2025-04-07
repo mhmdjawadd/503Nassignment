@@ -1,5 +1,5 @@
 import random
-from .model import fill_mask_model as fill_mask
+from ..model import fill_mask_model as fill_mask
 
 def generate_k_sentences(k: int, length: int):
     
