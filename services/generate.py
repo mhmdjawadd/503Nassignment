@@ -1,10 +1,8 @@
 import random
-from transformers import pipeline
+from ..model import fill_mask_model as fill_mask
 
 def generate_k_sentences(k: int, length: int):
-    # Initialize your fill-mask model
-    fill_mask = pipeline("fill-mask", model="bert-base-uncased")  
-
+    
     # Your text
     text = """The quick brown fox jumps over the lazy dog. The quick brown fox is quick and smart. Dogs are lazy but loyal. Foxes are clever, fast, and curious. The dog barked, the fox ran. The sky was blue, the grass was green, and the sun was shining. Everyone loved the peaceful day. Birds chirped. Leaves rustled. The wind blew softly. Children played outside. The cat slept. The rabbit hopped. The flowers bloomed. The bees buzzed. The world felt calm. The quick brown fox watched from a hill. The lazy dog slept under a tree. Clouds passed by. Time moved slowly. It was a good day. It was a simple day. It was a quiet day. It was a lovely day. Over and over, the fox ran and the dog napped. Harmony filled the land. Nothing was urgent. Nothing was wrong. Just a moment of peace, lasting long. The quick brown fox, the lazy dog, the calm wind — all in sync, all in stillness."""
 

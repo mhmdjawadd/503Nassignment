@@ -1,12 +1,12 @@
-from transformers import pipeline
+from ..model import fill_mask_model as fill_mask
 
-fill_mask = pipeline('fill-mask', model = 'bert-base-uncased')
-
-#takes sentence w/ [MASK] token & returns completed sentence
-#argument: sentence (str) = takes input sentence including the [MASK] token
-#returns: str = sentence / [MASK] replaced by the model's top (best) prediction
 
 def autocomplete_sentence(sentence: str) -> str: 
+    
+    """takes sentence w/ [MASK] token & returns completed sentence
+    argument: sentence (str) = takes input sentence including the [MASK] token
+    returns: str = sentence / [MASK] replaced by the model's top (best) prediction"""
+
     if "[MASK]" not in sentence:
         raise ValueError("The input sentence must contain a [MASK] token!")
 

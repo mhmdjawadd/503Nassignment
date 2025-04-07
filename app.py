@@ -1,19 +1,11 @@
-from flask import Flask, render_template, request, jsonify
-from transformers import pipeline
-import os
-from reconstruct import reconstruct_sentence_with_model
-from generate import generate_k_sentences  # Import the sentence generation function
-from autocomplete import autocomplete_sentence
+from flask import Flask,  request, jsonify
+from services.reconstruct import reconstruct_sentence
+from services.generate import generate_k_sentences  
+from services.autocomplete import autocomplete_sentence
 
 
 app = Flask(__name__)
 
-# Initialize the model
-fill_mask_model = pipeline('fill-mask', model='bert-base-uncased')
-
-@app.route('/', methods=['GET'])
-def index():
-    return render_template('index.html')
 
 @app.route('/reconstruct', methods=['POST'])
 def reconstruct():
@@ -24,7 +16,7 @@ def reconstruct():
         return jsonify({'error': 'No sentence provided'}), 400
     
     try:
-        reconstructed = reconstruct_sentence_with_model(sentence, fill_mask_model)
+        reconstructed = reconstruct_sentence(sentence)
         return jsonify({'original': sentence, 'reconstructed': reconstructed})
     except Exception as e:
         return jsonify({'error': str(e)}), 500

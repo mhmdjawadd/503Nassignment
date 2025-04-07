@@ -54,14 +54,14 @@ The server will start at ```http://127.0.0.1:5000/```
 - Method: GET
 - Request: query parameters k (# of sentences) and length (# of words in each sentence)
 ```
-/generate?k=5&length=10
+/generate?k=2&length=9
 ```
 - Response:
 ```
 {
   "sentences": [
       "The quick brown fox jumped over the lazy dog.",
-      "The cat slept under the tree."
+      "The cat and dog slept under the tree shadow."
   ]
 }
 ```
